@@ -1,8 +1,10 @@
 const express = require('express')
 const app = express()
-const port = 3000
+const port = process.env.PORT || 3001
 app.use(express.json())
 const uuid = require('uuid')
+const cors = require('cors')
+app.use(cors())
 
 
 //Checar Id e Index
@@ -33,12 +35,13 @@ app.get('/order', (request, response) => {
 
 //Criar pedido
 app.post('/order', (request, response) => {
+  
+        const { order, name, price, status } = request.body
 
-    const { order, clientName, price, status } = request.body
-    const newOrder = { id: uuid.v4(), order, clientName, price, status }
-    orders.push(newOrder)
-
-    return response.json(newOrder)
+        const newOrder = { id: uuid.v4(), order, name, price, status }
+        orders.push(newOrder)
+        return response.json(newOrder)
+ 
 })
 
 //Atualizar Pedido
@@ -46,14 +49,14 @@ app.put('/order/:id', checkId, (request, response) => {
 
     const id = request.orderId
     const index = request.orderIndex
-    const { order, clientName, price, status } = request.body
-    const updateOrder = { id, order, clientName, price, status }
+    const { order, name, price, status } = request.body
+    const updateOrder = { id, order, name, price, status }
 
     orders[index] = updateOrder
 
     return response.json(updateOrder)
 
-
+ 
 })
 
 //Deletar Pedido
@@ -74,8 +77,7 @@ app.get('/order/:id', checkId, (request, response) => {
     const showOnlyOrder = orders[index]
 
     return response.json(showOnlyOrder)
-
-
+    
 })
 
 
@@ -95,14 +97,14 @@ app.patch('/order/:id', checkId, (request, response) => {
     }
 
     orders[index] = FinishedOrder
- 
+
     return response.json(FinishedOrder)
 })
 
 //servidor
 app.listen(port, () => {
 
-    console.log('FUNFANDO')
+    console.log('FUNFANDO na porta 3001')
 })
 
 
